@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:id="@+id/txtVQtoGuess" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtVGuessed"
+        android:layout_weight="0.12" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/alert_light_frame"
+        android:id="@+id/imV"
+        android:layout_weight="0.61" />
+
+    <EditText
+        android:layout_width="232dp"
+        android:layout_height="66dp"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTxtGuessed"
+        android:hint="Skriv et bogstav her." />
+
+    <Button
+        android:text="Gæt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnGuess"
+        android:layout_weight="0.12" />
+
+</LinearLayout>
