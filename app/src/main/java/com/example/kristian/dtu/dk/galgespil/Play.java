@@ -18,7 +18,9 @@ public class Play extends Activity {
 
     ImageView imageView;
     GalgeLogic gl = new GalgeLogic();
+    Db db = new Db();
     Button btn;
+    Button btn2;
     private Context context = this;
     EditText gussed;
 
@@ -31,8 +33,12 @@ public class Play extends Activity {
         gl.startGame();
         TextView textView =(TextView) findViewById(R.id.txtVQtoGuess);
         textView.setText("Du skal gætte ordet: "+gl.getWordWithCorrectChar());
+        TextView highScore =(TextView) findViewById(R.id.txtHighscore);
+        highScore.setText("Highscore: "+db.readFromFile(context));
         btn = (Button) findViewById(R.id.btnGuess);
         btn.setOnClickListener(myHandler);
+        btn2 = (Button) findViewById(R.id.btnPlay);
+        btn2.setOnClickListener(myHandler);
     }
 
     View.OnClickListener myHandler = new View.OnClickListener() {
@@ -53,15 +59,30 @@ public class Play extends Activity {
                     wordsThatHasBeenUsed.setText("Bogstaver du har gættet på: " + gl.getListOfWordsThatHasBeenUsed());
                     checkStatusGame();
                     break;
+                case R.id.btnPlay:
+                    gl.restart();
+                    gl.startGame();
+                    String image = gl.checkStatus();
+                    int id = context.getResources().getIdentifier(image, "drawable", context.getPackageName());
+                    imageView.setImageResource(id);
+                    btn.setClickable(true);
+                    gussed.setText("");
+                    wordsThatHasBeenUsed = (TextView) findViewById(R.id.txtVGuessed);
+                    wordsThatHasBeenUsed.setText("Bogstaver du har gættet på: " + gl.getListOfWordsThatHasBeenUsed());
+                    TextView textView = (TextView) findViewById(R.id.txtVQtoGuess);
+                    textView.setText("Du skal gætte ordet: "+gl.getWordWithCorrectChar());
+                    break;
             }
         }
     };
 
     private boolean checkStatusGame(){
         if(gl.gameWon||!gl.gameOver){
-            if (gl.gameWon){Toast.makeText(context,"Du vandt",Toast.LENGTH_LONG).show(); return false;}
+            if (gl.gameWon){Toast.makeText(context,"Du vandt",Toast.LENGTH_LONG).show(); db.writeToFile(""+gl.wrongGuesses,context);
+                String highscore = db.readFromFile(context);
+                return false;}
         }
-        else { Toast.makeText(context,"TABER!!!",Toast.LENGTH_LONG).show(); return false;}
+        else { Toast.makeText(context,"TABER!!!",Toast.LENGTH_LONG).show(); btn.setClickable(false); return false;}
         return  true;
     }
 

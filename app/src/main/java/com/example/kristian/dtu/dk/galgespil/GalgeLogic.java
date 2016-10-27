@@ -25,6 +25,16 @@ public class GalgeLogic {
         checkWord();
     }
 
+    public void restart(){
+        gameOver = false;
+        gameWon = false;
+        wordToGuess ="";
+        wordWithCorrectChar = "";
+        listOfWordsThatHasBeenUsed = new ArrayList<>();
+        listOfWordsToGuess = new ArrayList<>();
+        wrongGuesses=0;
+    }
+
     public String guessedWord(String word){
         if(!wordToGuess.contains(word)){wrongGuesses++;}
         listOfWordsThatHasBeenUsed.add(word);

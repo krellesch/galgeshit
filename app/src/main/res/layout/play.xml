@@ -30,12 +30,30 @@
         android:ems="10"
         android:id="@+id/editTxtGuessed"
         android:hint="Skriv et bogstav her." />
-
-    <Button
-        android:text="Gæt"
+    <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnGuess"
-        android:layout_weight="0.12" />
+        android:layout_height="wrap_content">
 
+        <Button
+            android:text="Gæt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnGuess"
+            android:layout_weight="0.12" />
+
+        <Button
+            android:text="Spil igen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnPlay"
+            android:layout_weight="0.12"
+            android:layout_row="1"
+            android:layout_column="0" />
+
+    </GridLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/txtHighscore" />
 </LinearLayout>
