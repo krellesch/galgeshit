@@ -23,6 +23,7 @@ public class Play extends Activity {
     Button btn2;
     private Context context = this;
     EditText gussed;
+    TextView highScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +34,7 @@ public class Play extends Activity {
         gl.startGame();
         TextView textView =(TextView) findViewById(R.id.txtVQtoGuess);
         textView.setText("Du skal gætte ordet: "+gl.getWordWithCorrectChar());
-        TextView highScore =(TextView) findViewById(R.id.txtHighscore);
+        highScore =(TextView) findViewById(R.id.txtHighscore);
         highScore.setText("Highscore: "+db.readFromFile(context));
         btn = (Button) findViewById(R.id.btnGuess);
         btn.setOnClickListener(myHandler);
@@ -78,8 +79,9 @@ public class Play extends Activity {
 
     private boolean checkStatusGame(){
         if(gl.gameWon||!gl.gameOver){
-            if (gl.gameWon){Toast.makeText(context,"Du vandt",Toast.LENGTH_LONG).show(); db.writeToFile(""+gl.wrongGuesses,context);
+            if (gl.gameWon){Toast.makeText(context,"Du vandt",Toast.LENGTH_LONG).show(); db.checkHighScore(""+gl.wrongGuesses,context);
                 String highscore = db.readFromFile(context);
+                highScore.setText("Highscore: "+highscore);
                 return false;}
         }
         else { Toast.makeText(context,"TABER!!!",Toast.LENGTH_LONG).show(); btn.setClickable(false); return false;}

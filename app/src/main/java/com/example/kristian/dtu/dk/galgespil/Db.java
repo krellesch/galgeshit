@@ -16,6 +16,13 @@ import java.io.OutputStreamWriter;
 
 public class Db {
 
+    public void checkHighScore(String data, Context context){
+        String highScore = readFromFile(context);
+        if (Integer.parseInt(data) < Integer.parseInt(highScore)) {
+            writeToFile(data,context);
+        }
+    }
+
     public void writeToFile(String data,Context context) {
         try {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("config.txt", Context.MODE_PRIVATE));
