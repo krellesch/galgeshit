@@ -1,7 +1,13 @@
 package com.example.kristian.dtu.dk.galgespil;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 
@@ -59,6 +65,7 @@ public class GalgeLogic {
         if (wordToGuess.equalsIgnoreCase(wordWithCorrectChar)) { gameWon = true;}
         if(wrongGuesses >= 6){gameOver = true;}
         Object e = imageList().get(wrongGuesses);
+        printToLog();
         return e.toString();
     }
 
@@ -91,7 +98,36 @@ public class GalgeLogic {
         System.out.println("- wrong guesses = " + wrongGuesses);
         System.out.println("- gameWon = " + gameWon);
         System.out.println("- gameOver = " + gameOver);
+        System.out.println("- size of list = " + listOfWordsToGuess);
         System.out.println("---------- ");
+    }
+
+    public void hentOrdFraDr() throws Exception {
+        String data = hentUrl("http://dr.dk");
+        //System.out.println("data = " + data);
+
+        data = data.substring(data.indexOf("<body")).
+                replaceAll("<.+?>", " ").toLowerCase().replaceAll("[^a-zæøå]", " ").
+                replaceAll(" [a-zæøå] "," "). // fjern 1-bogstavsord
+                replaceAll(" [a-zæøå][a-zæøå] "," "); // fjern 2-bogstavsord
+
+        System.out.println("data = " + data);
+        listOfWordsToGuess.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
+
+        System.out.println("muligeOrd = " + wordToGuess);
+        System.out.println("size = " + listOfWordsToGuess);
+        //nulstil();
+    }
+
+    public static String hentUrl(String url) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+        StringBuilder sb = new StringBuilder();
+        String linje = br.readLine();
+        while (linje != null) {
+            sb.append(linje + "\n");
+            linje = br.readLine();
+        }
+        return sb.toString();
     }
 
     public String getWordWithCorrectChar() {

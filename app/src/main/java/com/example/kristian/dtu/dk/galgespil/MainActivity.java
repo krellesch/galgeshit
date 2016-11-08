@@ -2,6 +2,7 @@ package com.example.kristian.dtu.dk.galgespil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button button;
     private Context context = this;
+    GalgeLogic gl = new GalgeLogic();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

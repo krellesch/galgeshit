@@ -18,7 +18,7 @@ public class Db {
 
     public void checkHighScore(String data, Context context){
         String highScore = readFromFile(context);
-        if (Integer.parseInt(data) < Integer.parseInt(highScore)) {
+        if (Integer.parseInt(data) < Integer.parseInt(highScore)|| highScore == null) {
             writeToFile(data,context);
         }
     }

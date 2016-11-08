@@ -2,6 +2,7 @@ package com.example.kristian.dtu.dk.galgespil;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ public class Play extends Activity {
     Db db = new Db();
     Button btn;
     Button btn2;
+    Button btn3;
     private Context context = this;
     EditText gussed;
     TextView highScore;
@@ -40,6 +42,8 @@ public class Play extends Activity {
         btn.setOnClickListener(myHandler);
         btn2 = (Button) findViewById(R.id.btnPlay);
         btn2.setOnClickListener(myHandler);
+        btn3 = (Button) findViewById(R.id.btnGetDR);
+        btn3.setOnClickListener(myHandler);
     }
 
     View.OnClickListener myHandler = new View.OnClickListener() {
@@ -73,6 +77,26 @@ public class Play extends Activity {
                     TextView textView = (TextView) findViewById(R.id.txtVQtoGuess);
                     textView.setText("Du skal gætte ordet: "+gl.getWordWithCorrectChar());
                     break;
+                case R.id.btnGetDR:
+                    Toast.makeText(context,"Henter ord fra DRs server....",Toast.LENGTH_LONG).show();
+                    new AsyncTask() {
+                        @Override
+                        protected Object doInBackground(Object... arg0) {
+                            try {
+                                gl.hentOrdFraDr();
+                                return "Ordene blev korrekt hentet fra DR's server";
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return "Ordene blev ikke hentet korrekt: "+e;
+                            }
+                        }
+
+
+                        @Override
+                        protected void onPostExecute(Object resultat) {
+                            Toast.makeText(context,"resultat: \n" + resultat,Toast.LENGTH_LONG).show();
+                        }
+                    }.execute();
             }
         }
     };
