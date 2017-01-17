@@ -61,6 +61,21 @@ public class GalgeLogic {
         return wordWithCorrectChar;
     }
 
+    public String wordToChar(String word){
+        wordWithCorrectChar = "";
+        for (int n = 0; n < word.length(); n++) {
+            String cha = word.substring(n, n + 1);
+            if (listOfWordsThatHasBeenUsed.contains(cha)) {
+                wordWithCorrectChar = wordWithCorrectChar + cha;
+            } else {
+                wordWithCorrectChar = wordWithCorrectChar + "*";
+            }
+        }
+        printToLog();
+        return wordWithCorrectChar;
+    }
+
+
     public String checkStatus(){
         if (wordToGuess.equalsIgnoreCase(wordWithCorrectChar)) { gameWon = true;}
         if(wrongGuesses >= 6){gameOver = true;}
@@ -112,6 +127,7 @@ public class GalgeLogic {
                 replaceAll(" [a-zæøå][a-zæøå] "," "); // fjern 2-bogstavsord
 
         System.out.println("data = " + data);
+        listOfWordsToGuess = new ArrayList<String>();
         listOfWordsToGuess.addAll(new HashSet<String>(Arrays.asList(data.split(" "))));
 
         System.out.println("muligeOrd = " + wordToGuess);
@@ -130,11 +146,27 @@ public class GalgeLogic {
         return sb.toString();
     }
 
+    public ArrayList<String> getListOfWordsToGuess() {
+        return listOfWordsToGuess;
+    }
+
+    public void setListOfWordsToGuess(ArrayList<String> listOfWordsToGuess) {
+        this.listOfWordsToGuess = listOfWordsToGuess;
+    }
+
     public String getWordWithCorrectChar() {
         return wordWithCorrectChar;
     }
 
     public ArrayList<String> getListOfWordsThatHasBeenUsed() {
         return listOfWordsThatHasBeenUsed;
+    }
+
+    public String getWordToGuess() {
+        return wordToGuess;
+    }
+
+    public void setWordToGuess(String wordToGuess) {
+        this.wordToGuess = wordToGuess;
     }
 }

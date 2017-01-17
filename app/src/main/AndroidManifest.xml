@@ -13,10 +13,18 @@
         <activity
             android:name=".Play"
             android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name=".Help"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name=".Option"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name=".ListActivity"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

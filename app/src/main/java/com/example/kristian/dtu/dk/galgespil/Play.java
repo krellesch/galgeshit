@@ -1,9 +1,13 @@
 package com.example.kristian.dtu.dk.galgespil;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,46 +15,55 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static android.R.attr.key;
+
 /**
  * Created by Kristian on 12-10-2016.
  */
 
-public class Play extends Activity {
+public class Play extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     ImageView imageView;
     GalgeLogic gl = new GalgeLogic();
     Db db = new Db();
-    Button btn;
-    Button btn2;
-    Button btn3;
+    Button btn, btn2 ,btn3;
     private Context context = this;
     EditText gussed;
-    TextView highScore;
+    TextView highScore,wordToGuess;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.play);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
         imageView = (ImageView) findViewById(R.id.imV);
         imageView.setImageResource(R.drawable.galge);
+
         gl.startGame();
-        TextView textView =(TextView) findViewById(R.id.txtVQtoGuess);
-        textView.setText("Du skal gætte ordet: "+gl.getWordWithCorrectChar());
+
+        wordToGuess =(TextView) findViewById(R.id.txtVQtoGuess);
+        wordToGuess.setText("Du skal gætte ordet: "+gl.getWordWithCorrectChar());
+
         highScore =(TextView) findViewById(R.id.txtHighscore);
         highScore.setText("Highscore: "+db.readFromFile(context));
+
         btn = (Button) findViewById(R.id.btnGuess);
         btn.setOnClickListener(myHandler);
         btn2 = (Button) findViewById(R.id.btnPlay);
         btn2.setOnClickListener(myHandler);
         btn3 = (Button) findViewById(R.id.btnGetDR);
         btn3.setOnClickListener(myHandler);
+
+        gussed = (EditText) findViewById(R.id.editTxtGuessed);
     }
 
     View.OnClickListener myHandler = new View.OnClickListener() {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btnGuess:
-                    gussed = (EditText) findViewById(R.id.editTxtGuessed);
                     if (checkInputFromUser(gussed.getText().toString())) {
                         String w = gl.guessedWord(gussed.getText().toString());
                         TextView textView = (TextView) findViewById(R.id.txtVQtoGuess);
@@ -78,25 +91,9 @@ public class Play extends Activity {
                     textView.setText("Du skal gætte ordet: "+gl.getWordWithCorrectChar());
                     break;
                 case R.id.btnGetDR:
-                    Toast.makeText(context,"Henter ord fra DRs server....",Toast.LENGTH_LONG).show();
-                    new AsyncTask() {
-                        @Override
-                        protected Object doInBackground(Object... arg0) {
-                            try {
-                                gl.hentOrdFraDr();
-                                return "Ordene blev korrekt hentet fra DR's server";
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                return "Ordene blev ikke hentet korrekt: "+e;
-                            }
-                        }
-
-
-                        @Override
-                        protected void onPostExecute(Object resultat) {
-                            Toast.makeText(context,"resultat: \n" + resultat,Toast.LENGTH_LONG).show();
-                        }
-                    }.execute();
+                    Intent list = new Intent(context, ListActivity.class);
+                    startActivity(list);
+                    break;
             }
         }
     };
@@ -104,8 +101,11 @@ public class Play extends Activity {
     private boolean checkStatusGame(){
         if(gl.gameWon||!gl.gameOver){
             if (gl.gameWon){Toast.makeText(context,"Du vandt",Toast.LENGTH_LONG).show(); db.checkHighScore(""+gl.wrongGuesses,context);
+                String titler = prefs.getString("vundet", "(ingen titler)"); // Hent fra prefs
+                int res = Integer.parseInt(titler)+1;
+                prefs.edit().putString("vundet", ""+res).commit();
                 String highscore = db.readFromFile(context);
-                highScore.setText("Highscore: "+highscore);
+                highScore.setText("Highscore: "+highscore  +" vundet i alt:"+res);
                 return false;}
         }
         else { Toast.makeText(context,"TABER!!!",Toast.LENGTH_LONG).show(); btn.setClickable(false); return false;}
@@ -131,4 +131,11 @@ public class Play extends Activity {
         else{return false;}
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        String wordToGuees = sharedPreferences.getString("wordToGuess","");
+        String result  = "Du skal gætte ordet: "+ gl.wordToChar(wordToGuees);
+        wordToGuess.setText(result);
+        gl.setWordToGuess(wordToGuees);
+    }
 }

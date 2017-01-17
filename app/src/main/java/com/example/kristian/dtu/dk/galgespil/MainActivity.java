@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button button;
+    private Button play,help,option;
     private Context context = this;
     GalgeLogic gl = new GalgeLogic();
 
@@ -20,8 +20,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        button = (Button) findViewById(R.id.btnPlay);
-        button.setOnClickListener(myHandler);
+        play = (Button) findViewById(R.id.btnPlay);
+        play.setOnClickListener(myHandler);
+        option = (Button) findViewById(R.id.btnOptions);
+        option.setOnClickListener(myHandler);
+        help = (Button) findViewById(R.id.btnHelp);
+        help.setOnClickListener(myHandler);
     }
 
     View.OnClickListener myHandler = new View.OnClickListener() {
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btnOptions:
                     Intent option = new Intent(context, Option.class);
                     startActivity(option);
+                    break;
             }
         }
     };
